@@ -47,21 +47,26 @@ def is_safe(row, col, queens):
 
 def n_queens(n):
     """
-    Solve the N Queens problem and print all the solutions.
+    Solve the N Queens problem and return all the solutions.
 
     Args:
         n (int): The size of the chessboard.
+
+    Returns:
+        list: A list of all solutions to the N Queens problem.
     """
     if n < 4:
         print("N must be at least 4")
         sys.exit(1)
 
     solutions = generate_solutions(0, n)
+    formatted_solutions = []
 
     for queens in solutions:
-        for col in queens:
-            print(f"[{queens.index(col)}, {col}]", end=" ")
-        print()
+        formatted_solution = [[queens.index(col), col] for col in queens]
+        formatted_solutions.append(formatted_solution)
+
+    return formatted_solutions
 
 
 if __name__ == '__main__':
@@ -75,4 +80,7 @@ if __name__ == '__main__':
         print("N must be a number")
         sys.exit(1)
 
-    n_queens(n)
+    solutions = n_queens(n)
+
+    for solution in solutions:
+        print(solution)
