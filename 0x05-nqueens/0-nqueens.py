@@ -1,86 +1,87 @@
 #!/usr/bin/python3
+"""Moving the queen in an NxN chessboard"""
+
 import sys
 
 
-def generate_solutions(row, column, queens=[]):
+def place_the_queen(queen, col, prev):
+    """sumary_line
+
+    Keyword arguments:
+    argument -- description
+    Return: return_description
     """
-    Generate all possible solutions for the N Queens problem recursively.
 
-    Args:
-        row (int): The current row to place the queen.
-        column (int): The total number of columns on the chessboard.
-        queens (list): The list of queens placed so far.
+    move_forward = []
+    for arr in prev:
+        for x in range(col):
+            if is_safe(queen, x, arr):
+                move_forward.append(arr + [x])
+    return move_forward
 
-    Returns:
-        list: A list of all possible solutions to the N Queens problem.
+
+def get_solutions(row, column):
+    sol = [[]]
+    for queen in range(row):
+        sol = place_the_queen(queen, column, sol)
+    return sol
+
+
+def is_safe(q, x, arr):
+    """sumary_line
+
+    Keyword arguments:
+    argument -- description
+    Return: return_description
     """
-    if row == column:
-        return [queens]
 
-    solutions = []
-
-    for col in range(column):
-        if is_safe(row, col, queens):
-            new_queens = queens + [col]
-            solutions.extend(generate_solutions(row + 1, column, new_queens))
-
-    return solutions
+    if x in arr:
+        return (False)
+    else:
+        return all(abs(arr[column] - x) != q - column
+                   for column in range(q))
 
 
-def is_safe(row, col, queens):
+def init():
+    """sumary_line
+
+    Keyword arguments:
+    argument -- description
+    Return: return_description
     """
-    Check if it is safe to place a queen at the given position.
 
-    Args:
-        row (int): The row to place the queen.
-        col (int): The column to place the queen.
-        queens (list): The list of queens placed so far.
-
-    Returns:
-        bool: True if it is safe to place the queen, False otherwise.
-    """
-    for r, c in enumerate(queens):
-        if col == c or abs(row - r) == abs(col - c):
-            return False
-    return True
-
-
-def n_queens(n):
-    """
-    Solve the N Queens problem and return all the solutions.
-
-    Args:
-        n (int): The size of the chessboard.
-
-    Returns:
-        list: A list of all solutions to the N Queens problem.
-    """
-    if n < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    solutions = generate_solutions(0, n)
-    formatted_solutions = []
-
-    for queens in solutions:
-        formatted_solution = [[queens.index(col), col] for col in queens]
-        formatted_solutions.append(formatted_solution)
-
-    return formatted_solutions
-
-
-if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-
-    try:
-        n = int(sys.argv[1])
-    except ValueError:
+    if sys.argv[1].isdigit():
+        num = int(sys.argv[1])
+    else:
         print("N must be a number")
         sys.exit(1)
+    if num < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+    return (num)
 
-    solutions = n_queens(n)
 
-    for solution in solutions:
-        print(solution)
+def N_Queens():
+    """sumary_line
+
+    Keyword arguments:
+    argument -- description
+    Return: return_description
+    """
+
+    num = init()
+
+    sol = get_solutions(num, num)
+
+    for arr in sol:
+        clear = []
+        for q, x in enumerate(arr):
+            clear.append([q, x])
+        print(clear)
+
+
+if __name__ == '__main__':
+    N_Queens()
