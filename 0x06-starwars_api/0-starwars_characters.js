@@ -1,30 +1,27 @@
 #!/usr/bin/node
-
 const request = require('request');
-const Id = process.argv[2];
-const Endpoint = `https://swapi.dev/api/films/${Id}/`;
 
-function makeRequest (charactList, index) {
-  if (charactList.length === index) {
-    return;
-  }
+function getCharacterName(url) {
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (error) reject(error);
+      else resolve(JSON.parse(body).name);
+    });
+  });
+}
 
-  request(charactList[index], (error, response, body) => {
-    if (error) {
-      console.error('Error:', error);
-    } else {
-      console.log(JSON.parse(body).name);
-      makeRequest(charactList, index + 1);
+function getMovieCharacters(movieId) {
+  request(`https://swapi.dev/api/films/${movieId}/`, async (error, response, body) => {
+    if (error) console.error(error);
+    else {
+      const characters = JSON.parse(body).characters;
+      for (const characterUrl of characters) {
+        const name = await getCharacterName(characterUrl);
+        console.log(name);
+      }
     }
   });
 }
 
-request(Endpoint, (error, response, body) => {
-  if (error) {
-    console.error('Error:', error);
-  } else {
-    const characters = JSON.parse(body).characters;
-
-    makeRequest(characters, 0);
-  }
-});
+const movieId = process.argv[2];
+getMovieCharacters(movieId);
