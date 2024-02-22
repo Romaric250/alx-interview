@@ -1,16 +1,17 @@
 #!/usr/bin/python3
-def rotate_2d_matrix(matrix):
-    """
-    Rotate a 2D matrix 90 degrees clockwise
-    """
-    n = len(matrix)
+def switch_rows_and_columns(mat, size):
+    for x in range(size):
+        for y in range(x, size):
+            mat[x][y], mat[y][x] = mat[y][x], mat[x][y]
 
-    for i in range(n):
-        for j in range(i, n):
-            # Transpose the matrix
-            matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+def flip_rows(mat):
+    for row in mat:
+        row.reverse()
 
-        # Reverse each row
-        matrix[i] = matrix[i][::-1]
+def rotate_2d_matrix(mat):
+    size_of_matrix = len(mat)
 
-    return matrix
+    switch_rows_and_columns(mat, size_of_matrix)
+    flip_rows(mat)
+
+    return mat
